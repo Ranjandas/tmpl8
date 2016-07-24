@@ -2,7 +2,6 @@
 
 import argparse
 import os
-import shutil
 import string
 import sys
 
@@ -44,10 +43,10 @@ def print_conf_table(config_file, namespace, config_parser):
     print table
 
 
-def write_ansible_defaults(config_file, namespace, var_file, config_parser):
+def write_ansible_defaults(config_file, namespace, config_parser):
     config_parser.read(config_file)
 
-    var_filename = var_file + ".yaml"
+    var_filename = config_file + ".yaml"
     defaults_file = open(var_filename, "wb")
     defaults_file.write("---\n\n")
 
@@ -68,20 +67,9 @@ def write_ansible_defaults(config_file, namespace, var_file, config_parser):
     defaults_file.close()
 
 
-def copy_config_to_template(src, dest):
-    try:
-        shutil.copy(src, dest)
-    except Exception as e:
-        print e
-        exit(3)
+def write_ansible_template(config_file, namespace, config_parser):
 
-
-def write_ansible_template(config_file, namespace, template_file,
-                           config_parser):
-
-    template_file = template_file + ".j2"
-
-    copy_config_to_template(config_file, template_file)
+    template_file = config_file + ".j2"
 
     for x in config_parser.sections():
         for item in config_parser.items(x):
@@ -96,7 +84,7 @@ def write_ansible_template(config_file, namespace, template_file,
 
 def main():
 
-    DESC = "Convert config files to var files and templates for Ansible."
+    """Convert config files to var files and templates for Ansible."""
 
     arg_parser = argparse.ArgumentParser()
     arg_parser.add_argument("-c", "--conf", required=True,
@@ -121,8 +109,8 @@ def main():
             print_conf_table(args.conf, args.n, config_parser)
 
         if args.out:
-            write_ansible_defaults(args.conf, args.n, args.out, config_parser)
-            write_ansible_template(args.conf, args.n, "tmpl8", config_parser)
+            write_ansible_defaults(args.conf, args.n, config_parser)
+            write_ansible_template(args.conf, args.n, config_parser)
 
 
 if __name__ == "__main__":

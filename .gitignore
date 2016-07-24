@@ -2,3 +2,4 @@ venv
 *.ini
 *.yaml
 *.yml
+*.j2
