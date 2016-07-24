@@ -53,8 +53,12 @@ def write_ansible_defaults(config_file, namespace, config_parser):
     for x in config_parser.sections():
         if config_parser.items(x):
             for item in config_parser.items(x):
-                variable = namespace + "_" + x + "_" + item[0]
-                value = item[1]
+                variable = namespace + "_" + replace_dot(x) + "_" + item[0]
+
+                if item[1].lower() not in ["true", "false"]:
+                    value = "\"" + item[1] + "\""
+                else:
+                    value = item[1]
 
                 line = variable + ": " + value
 
@@ -102,7 +106,7 @@ def main():
                        help="name for the generated ansible var file")
     args = arg_parser.parse_args()
 
-    config_parser = configparser.SafeConfigParser()
+    config_parser = configparser.RawConfigParser()
 
     if file_exists(args.conf):
         if args.p:
