@@ -21,10 +21,7 @@ def file_exists(inifile):
 
 
 def replace_dot(var):
-    if string.find(var, ".") != -1:
-        return string.replace(var, ".", "_")
-    else:
-        return var
+    return string.replace(var, ".", "_")
 
 
 def print_conf_table(config_file, namespace, config_parser):
